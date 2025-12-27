@@ -18,11 +18,11 @@ QUERY_BEGINNING='[out:json][timeout:25]; nwr["indoor"="room"]["ref"~""]('
 QUERY_END='); out tags geom;'
 
 # Wolfenbüttel Campus:
-BBOX_WFB='52.174312,10.542111,52.183790,10.564728'
+BBOX_WF='52.174312,10.542111,52.183790,10.564728'
 # http://bboxfinder.com/#52.174312,10.542111,52.183790,10.564728
 
 # Salzgitter Campus Calbrecht:
-BBOX_SZG='52.081906,10.371480,52.092744,10.390105'
+BBOX_SZ='52.081906,10.371480,52.092744,10.390105'
 # http://bboxfinder.com/#52.081906,10.371480,52.092744,10.390105
 
 # Campus Wolfsburg
@@ -30,7 +30,7 @@ BBOX_WOB='52.423550,10.774144,52.426504,10.788885'
 # http://bboxfinder.com/#52.423550,10.774144,52.426504,10.788885
 
 # Campus Suderburg: 
-BBOX_SDB='52.896564,10.443470,52.898713,10.448105'
+BBOX_SUD='52.896564,10.443470,52.898713,10.448105'
 # http://bboxfinder.com/#52.896564,10.443470,52.898713,10.448105
 
 echo "Fetching OSM data..."
@@ -41,19 +41,19 @@ mkdir -p "$(dirname "$OUTPUT_FILE")"
 # TODO: Für Wolfenbüttel, Suderburg, Wolfsburg, Salzgitter
 
 # Wolfenbüttel:
-echo "Fetching WFB..."
-curl -X GET --data-urlencode "data=${QUERY_BEGINNING}${BBOX_WFB}${QUERY_END}" "https://overpass-api.de/api/interpreter" | \
-  jq '.elements | map({id: .id, level: .tags.level, ref: .tags.ref}) | map({(.ref): {id: .id, level: .level}}) | add' > "$OUTPUT_FILE"WFB.json
+echo "Fetching WF..."
+curl -X GET --data-urlencode "data=${QUERY_BEGINNING}${BBOX_WF}${QUERY_END}" "https://overpass-api.de/api/interpreter" | \
+  jq '.elements | map({id: .id, level: .tags.level, ref: .tags.ref}) | map({(.ref): {id: .id, level: .level}}) | add' > "$OUTPUT_FILE"WF.json
 
 # Suderburg:
-echo "Fetching SDB..."
-curl -X GET --data-urlencode "data=${QUERY_BEGINNING}${BBOX_SDB}${QUERY_END}" "https://overpass-api.de/api/interpreter" | \
-  jq '.elements | map({id: .id, level: .tags.level, ref: .tags.ref}) | map({(.ref): {id: .id, level: .level}}) | add' > "$OUTPUT_FILE"SDB.json
+echo "Fetching SUD..."
+curl -X GET --data-urlencode "data=${QUERY_BEGINNING}${BBOX_SUD}${QUERY_END}" "https://overpass-api.de/api/interpreter" | \
+  jq '.elements | map({id: .id, level: .tags.level, ref: .tags.ref}) | map({(.ref): {id: .id, level: .level}}) | add' > "$OUTPUT_FILE"SUD.json
 
 # Salzgitter:
-echo "Fetching SZG..."
-curl -X GET --data-urlencode "data=${QUERY_BEGINNING}${BBOX_SZG}${QUERY_END}" "https://overpass-api.de/api/interpreter" | \
-  jq '.elements | map({id: .id, level: .tags.level, ref: .tags.ref}) | map({(.ref): {id: .id, level: .level}}) | add' > "$OUTPUT_FILE"SZG.json
+echo "Fetching SZ..."
+curl -X GET --data-urlencode "data=${QUERY_BEGINNING}${BBOX_SZ}${QUERY_END}" "https://overpass-api.de/api/interpreter" | \
+  jq '.elements | map({id: .id, level: .tags.level, ref: .tags.ref}) | map({(.ref): {id: .id, level: .level}}) | add' > "$OUTPUT_FILE"SZ.json
 
 # Wolfsburg:
 echo "Fetching WOB..."
@@ -61,25 +61,25 @@ curl -X GET --data-urlencode "data=${QUERY_BEGINNING}${BBOX_WOB}${QUERY_END}" "h
   jq '.elements | map({id: .id, level: .tags.level, ref: .tags.ref}) | map({(.ref): {id: .id, level: .level}}) | add' > "$OUTPUT_FILE"WOB.json
 
 # Validate JSON
-if ! jq empty "${OUTPUT_FILE}WFB.json" 2>/dev/null; then
-  echo "[ERROR] WFB: Invalid JSON generated!"
+if ! jq empty "${OUTPUT_FILE}WF.json" 2>/dev/null; then
+  echo "[ERROR] WF: Invalid JSON generated!"
   exit 1
 else
-  echo "✓ Successfully saved room data to ${OUTPUT_FILE}WFB.json"
+  echo "✓ Successfully saved room data to ${OUTPUT_FILE}WF.json"
 fi
 
-if ! jq empty "${OUTPUT_FILE}SDB.json" 2>/dev/null; then
-  echo "[ERROR] SDB: Invalid JSON generated!"
+if ! jq empty "${OUTPUT_FILE}SUD.json" 2>/dev/null; then
+  echo "[ERROR] SUD: Invalid JSON generated!"
   exit 1
 else
-  echo "✓ Successfully saved room data to ${OUTPUT_FILE}SDB.json"
+  echo "✓ Successfully saved room data to ${OUTPUT_FILE}SUD.json"
 fi
 
-if ! jq empty "${OUTPUT_FILE}SZG.json" 2>/dev/null; then
-  echo "[ERROR] SZG: Invalid JSON generated!"
+if ! jq empty "${OUTPUT_FILE}SZ.json" 2>/dev/null; then
+  echo "[ERROR] SZ: Invalid JSON generated!"
   exit 1
 else
-  echo "✓ Successfully saved room data to ${OUTPUT_FILE}SZG.json"
+  echo "✓ Successfully saved room data to ${OUTPUT_FILE}SZ.json"
 fi
 
 if ! jq empty "${OUTPUT_FILE}WOB.json" 2>/dev/null; then
